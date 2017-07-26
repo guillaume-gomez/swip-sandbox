@@ -2,7 +2,9 @@
 class AssetsLoader {
 
   constructor() {
-    this._data = {};
+    this._images = {};
+    this._atlases = {};
+    this._textures = {};
   }
 
   getInstance() {
@@ -11,20 +13,53 @@ class AssetsLoader {
     }
     return AssetsManager._instance;
   }
-
-  getData() {
-    return this._data;
+  
+  addImage(image, alias) {
+    this._images[alias] = image;
   }
 
-  getDataByAlias(alias) {
-    if(this._data[alias]) {
-      return this._data[alias];
+  getImages(){
+    return this._images;
+  }
+
+  getImageByAlias(alias){
+    if(this._images[alias]) {
+      return this._images[alias];
     }
     return null;
   }
 
-  addImage(image, alias) {
-    this._data[alias] = image;
+  //atlases
+  addAtlas(atlas, alias) {
+    this._atlases[alias] = atlas;
+  }
+
+  getAtlases() {
+    return this._atlases;
+  }
+
+  getAtlasByAlias(alias){
+    if(this._atlases[alias]) {
+        return this._atlases[alias];
+    }   
+    return null;
+  }
+
+  //textures
+  addTexture(texture, alias){
+      this._textures[alias] = texture;
+  }
+
+  getTextures(){
+      return this._textures;
+  }
+
+  getTextureByAlias(alias){
+    if(this._textures[alias]) {
+      return this._textures[alias];
+    }
+        
+    return null;
   }
 }
 export default AssetsLoader;
