@@ -1,4 +1,6 @@
 //Tomahawk.registerClass( TextureAtlas, "TextureAtlas" );
+import Texture from "./texture";
+
 class TextureAtlas {
   constructor() {
     this._textures = [];

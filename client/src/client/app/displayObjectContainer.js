@@ -1,10 +1,11 @@
 // Tomahawk.registerClass( DisplayObjectContainer, "DisplayObjectContainer" );
 // Tomahawk.extend( "DisplayObjectContainer", "DisplayObject" );
-import DisplayObject from "displayObject";
+import DisplayObject from "./displayObject";
 
 class DisplayObjectContainer extends DisplayObject {
 
   constructor() {
+      super();
       this.children = [];
   }
 
@@ -12,7 +13,6 @@ class DisplayObjectContainer extends DisplayObject {
     if(child.parent){
       child.parent.removeChild(child);
     }
-    
     child.parent = this;
     this.children.push(child);
   }
@@ -29,7 +29,6 @@ class DisplayObjectContainer extends DisplayObject {
     const tab1 = this.children.slice(0,index);
     const tab2 = this.children.slice(index);
     this.children = tab1.concat([child]).concat(tab2);
-    
     child.parent = this;
   };
 
