@@ -454,4 +454,4 @@ Matrix2D.prototype.toString = function() {
 };
 Matrix2D.identity = new Matrix2D();
 
-export default Maxtrix2D;
+export default Matrix2D;
