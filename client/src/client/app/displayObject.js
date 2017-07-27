@@ -1,4 +1,5 @@
 //Tomahawk.registerClass( DisplayObject, "DisplayObject" );
+import Maxtrix2D from "./matrix2D";
 
 class DisplayObject {
 
@@ -13,20 +14,25 @@ class DisplayObject {
     this.height = 0;
     this.rotation = 0;
     this.alpha = 1;
+    this.matrix = new Matrix2D();
   }
 
   toRadians() {
     return Math.PI / 180;
   }
 
-  render(context){        
-    context.save();
-    context.translate(this.x, this.y);
-    context.rotate(this.rotation * DisplayObject._toRadians);
-    context.scale( this.scaleX, this.scaleY );
-    context.globalAlpha = this.alpha;
+  render(context) {        
+   this.update();        
 
-    this.draw(context); 
+    if(this.visible === false) {
+      return;
+    }
+        
+    const mat = this.matrix;
+    context.save();
+    context.globalAlpha = this.alpha;
+    context.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
+    this.draw(context);
     context.restore();
   }
 
@@ -35,6 +41,21 @@ class DisplayObject {
     context.fillStyle = "red";
     context.fillRect(0, 0, this.width, this.height);
     context.fill();
+  }
+
+  update(){
+   const mat = this.matrix;   
+   mat.appendTransform(
+    this.x, 
+        this.y, 
+        this.scaleX, 
+        this.scaleY, 
+        this.rotation, 
+        this.skewX, 
+        this.skewY, 
+        this.pivotX, 
+        this.pivotY
+    );
   }
 };
 export default DisplayObject;
