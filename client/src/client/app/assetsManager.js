@@ -1,19 +1,26 @@
 //Tomahawk.registerClass( AssetsManager, "AssetsManager" );
-class AssetsLoader {
+let instance = null;
+
+class AssetsManager {
 
   constructor() {
+    if(!instance) {
+      instance = this;
+    }
     this._images = {};
     this._atlases = {};
     this._textures = {};
+
+    return instance;
   }
 
   getInstance() {
-    if(AssetsManager._instance === null) {
-      AssetsManager._instance = new AssetsManager();
+    if(!instance ) {
+      instance = this;
     }
-    return AssetsManager._instance;
+    return this;
   }
-  
+
   addImage(image, alias) {
     this._images[alias] = image;
   }
@@ -41,7 +48,7 @@ class AssetsLoader {
   getAtlasByAlias(alias){
     if(this._atlases[alias]) {
         return this._atlases[alias];
-    }   
+    }
     return null;
   }
 
@@ -58,8 +65,8 @@ class AssetsLoader {
     if(this._textures[alias]) {
       return this._textures[alias];
     }
-        
     return null;
   }
-}
-export default AssetsLoader;
+};
+
+export default AssetsManager;

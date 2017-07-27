@@ -1,20 +1,24 @@
 //Tomahawk.registerClass( AssetsLoader, "AssetsLoader" );
+let instance = null;
 
 class AssetsLoader {
 	constructor() {
-    AssetsLoader._instance = null;
+    if(!instance) {
+      instance = this;
+    }
     this._loadingList = [];
     //callback functions
     this.onComplete = null;
-    this._loadingList = null;
     this._data = null;
+
+    return instance;
 	}
 
   getInstance() {
-    if( AssetsLoader._instance === null ) {
-      AssetsLoader._instance = new AssetsLoader();
+    if(!instance ) {
+      instance = this;
     }
-    return AssetsLoader._instance;
+    return this;
   }
 
   getData() {
@@ -47,5 +51,5 @@ class AssetsLoader {
     this._data[alias] = image;
     this.load();
   }
-}
+};
 export default AssetsLoader;
