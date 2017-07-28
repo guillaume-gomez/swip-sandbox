@@ -115,6 +115,7 @@ class DisplayObject extends EventDispatcher {
   //   const pt1 = this.globalToLocal(x,y);
   //   return pt1.x < 0 || pt1.x > this.width || pt1.y < 0 || pt1.y > this.height;
   // }
+  // TODO USE IT IN STAGE CLASS SO DONT FORGET TO ADD MISSING CODE DUDE :)
 
 
 };
