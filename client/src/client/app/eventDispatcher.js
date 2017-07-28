@@ -5,7 +5,6 @@ class EventDispatcher {
     this.parent = null;
     this._listeners = [];
   }
-  
   addEventListener(type, scope, callback, useCapture) {
     this._listeners.push({ type, scope, callback, useCapture });
   }
@@ -19,9 +18,6 @@ class EventDispatcher {
   }
 
   dispatchEvent(event) {
-    var obj = {};
-    var i = this._listeners.length;
-    
     if(event.target === null) {
       event.target = this;
     }
@@ -29,9 +25,8 @@ class EventDispatcher {
     const eventFound = this.getEventListener(type);
     if(eventFound) {
       if(event.target === this || eventFound.useCapture !== false){
-         obj.callback.apply(eventFound.scope, [event]);
+         eventFound.callback.apply(eventFound.scope, [event]);
       }
-                  
     }
     if(event.bubbles === true && this.parent !== null && this.parent.dispatchEvent) {
       this.parent.dispatchEvent(event);
@@ -44,17 +39,16 @@ class EventDispatcher {
 
   removeEventListener(type, scope, callback, useCapture) {
     let listener = this.getEventListener(type);
-    
-    while( listener != null ){
+    while( listener != null ) {
         var obj = {};
         var i = this._listeners.length;
         var arr = [];
-        const newListeners = this._listeners.filter(listener => {
-          return  obj.type != listener.type || obj.scope != scope || obj.callback != callback || obj.useCapture != useCapture;
+        const newListeners = this._listeners.filter(listenerCurrent => {
+          return  listenerCurrent.type != listener.type || listenerCurrent.scope != scope || listenerCurrent.callback != callback || listenerCurrent.useCapture != useCapture;
         });
         this._listeners = newListeners;
         let listener = this.getEventListener(type);
     }
   }
 };
-export default EventDispatcher; 
+export default EventDispatcher;
