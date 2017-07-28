@@ -7,6 +7,7 @@ import Bitmap from "./bitmap";
 import DisplayObjectContainer from "./displayObjectContainer";
 import DisplayObject from "./displayObject";
 import Event, { Triggers } from "./event";
+import GrayScaleFilter from "./grayScaleFilter";
 
 /* Point d'entrée de l'application */
 let assetsManager = new AssetsManager();
@@ -38,31 +39,31 @@ function onComplete(){
 
     // on crée deux textures différentes, portant un nom différent, ayant chacune la même image
     // mais pas les mêmes portions d'image associées
-    atlas.createTexture( "texture_1", 0,0,64,43);
+    atlas.createTexture( "texture_1", 0,0,256,156);
 
     var texture = atlas.getTextureByName("texture_1"); // on retrouve notre texture
     var bmp = new Bitmap(); // on créer un nouvel objet de type Bitmap
     bmp.texture = texture; // on y associe la texture
-    bmp.width = 64; // on définie la largeur
-    bmp.height = 43;//... puis la hauteur
-
-    stage.getInstance().addChild(bmp); // on ajoute l'enfant à la racine
+    bmp.width = 256; // on définie la largeur
+    bmp.height = 156;//... puis la hauteur
+    //stage.getInstance().addChild(bmp); // on ajoute l'enfant à la racine
 
     // on recommence l'opération tout en changeant les coordonnées du deuxième enfant
+    const filter = new GrayScaleFilter();
     bmp = new Bitmap();
     bmp.texture = texture;
-    bmp.width = 64;
-    bmp.height = 43;
-    bmp.x = 100;
+    bmp.width = 256/2;
+    bmp.height = 156/2;
+    bmp.x = 400;
     bmp.y = 100;
     stage.getInstance().addChild(bmp); // on l'ajoute aussi
-    stage.getInstance().setDebug(true);// on souhaite voir le fps
+    //stage.getInstance().setDebug(true);// on souhaite voir le fps
 
 
-    var container = new DisplayObjectContainer();
-    var disp = new DisplayObject();
-    disp.addEventListener(Triggers.ADDED, null, onAdded, true);
-    container.addChild(disp);
+    // var container = new DisplayObjectContainer();
+    // var disp = new DisplayObject();
+    // disp.addEventListener(Triggers.ADDED, null, onAdded, true);
+    // container.addChild(disp);
 }
 
 function getCanvas(){
