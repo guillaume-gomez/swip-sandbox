@@ -1,11 +1,25 @@
 import {drawBackground, drawWalls, openingSort, drawBall, drawArrow, drawHole, throttle} from "./renderingFunctions"
+import AssetsLoader from "./assetsLoader";
+import AssetsManager from "./assetsManager";
+import Texture from "./texture";
+import TextureAtlas from "./textureAtlas";
+import Stage from "./stage";
+import Bitmap from "./bitmap";
+
 /* eslint-disable */
 function golf() {
   'use strict';
 
   var socket = io.connect();
+  let assetsManager = new AssetsManager();
+  let assetsLoader = new AssetsLoader();
+  let test = null;
+  //let stage = new Stage();
 
   swip.init({ socket: socket, container: document.getElementById('root') }, function (client) {
+    assetsLoader.getInstance().onComplete = onComplete;
+    assetsLoader.getInstance().addFile("atari400.png","ground");
+    assetsLoader.getInstance().load();
     var converter = client.converter;
     var stage = client.stage;
     var ctx = stage.getContext('2d');
@@ -85,6 +99,9 @@ function golf() {
 
       drawBall(ctx, ball);
       drawWalls(ctx, client);
+      if(test) {
+        test.render(ctx)
+      }
 
       ctx.restore();
     });
@@ -94,6 +111,37 @@ function golf() {
     ctx.translate(-converter.toDevicePixel(transform.x), -converter.toDevicePixel(transform.y));
     ctx.scale(converter.toDevicePixel(1), converter.toDevicePixel(1));
 
+  }
+
+  function onComplete() {
+    var data = assetsLoader.getInstance().getData();
+    // on initialise la racine en lui envoyant la référence vers le canvas
+    //stage.getInstance().init(canvas);
+
+    for( var alias in data ){
+        assetsManager.getInstance().addImage(data[alias],alias);
+    }
+
+    // on crée un nouvel atlas
+    var atlas = new TextureAtlas();
+
+    // on lui associe une image qui sera celle partagée par toutes les textures stockée en son sein
+    atlas.data = assetsManager.getInstance().getImageByAlias("ground");
+
+    // on crée deux textures différentes, portant un nom différent, ayant chacune la même image
+    // mais pas les mêmes portions d'image associées
+    atlas.createTexture( "texture_1", 0,0,256,156);
+
+    var texture = atlas.getTextureByName("texture_1"); // on retrouve notre texture
+    let bmp = new Bitmap(); // on créer un nouvel objet de type Bitmap
+    bmp.texture = texture; // on y associe la texture
+    bmp.width = 256; // on définie la largeur
+    bmp.height = 156;//... puis la hauteur
+    bmp.x = 200;
+    bmp.y = 200;
+    test = bmp;
+    //bmp.drawOnly(ctx)
+    //stage.getInstance().addChild(bmp); // on ajoute l'enfant à la racine
   }
 
 };
