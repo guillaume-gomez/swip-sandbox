@@ -1,5 +1,5 @@
 //Tomahawk.registerClass( DisplayObject, "DisplayObject" );
-import Maxtrix2D from "./matrix2D";
+import Matrix2D from "./matrix2D";
 
 class DisplayObject {
 
@@ -21,18 +21,28 @@ class DisplayObject {
     return Math.PI / 180;
   }
 
-  render(context) {        
-   this.update();        
+  render(context) {
+   // this.update();
 
-    if(this.visible === false) {
-      return;
-    }
-        
-    const mat = this.matrix;
-    context.save();
+   //  if(this.visible === false) {
+   //    return;
+   //  }
+   //  const mat = this.matrix;
+   //  context.save();
+   //  context.globalAlpha = this.alpha;
+   //  context.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
+   //  this.draw(context);
+   //  context.restore();
+    context.save(); // d'abord on sauvegarde le context
+    //puis on applique les transformations, comme nous avons
+    // dans les chapitres précédents
+    context.translate(this.x, this.y);
+    context.rotate(this.rotation * DisplayObject._toRadians);
+    context.scale( this.scaleX, this.scaleY );
     context.globalAlpha = this.alpha;
-    context.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
+    // puis on dessine
     this.draw(context);
+    // et enfin on restaure le context sauvegardé plus haut
     context.restore();
   }
 
@@ -44,17 +54,17 @@ class DisplayObject {
   }
 
   update(){
-   const mat = this.matrix;   
+   const mat = this.matrix;
    mat.appendTransform(
-    this.x, 
-        this.y, 
-        this.scaleX, 
-        this.scaleY, 
-        this.rotation, 
-        this.skewX, 
-        this.skewY, 
-        this.pivotX, 
-        this.pivotY
+      this.x,
+      this.y,
+      this.scaleX,
+      this.scaleY,
+      this.rotation,
+      this.skewX,
+      this.skewY,
+      this.pivotX,
+      this.pivotY
     );
   }
 };
