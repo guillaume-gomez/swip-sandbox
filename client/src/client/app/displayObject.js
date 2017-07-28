@@ -18,6 +18,7 @@ class DisplayObject extends EventDispatcher {
     this.alpha = 1;
     this.matrix = new Matrix2D();
     this._concatenedMatrix = new Matrix2D();
+    this.filters = [];
   }
 
   toRadians() {
@@ -72,6 +73,37 @@ class DisplayObject extends EventDispatcher {
       this.pivotX,
       this.pivotY
     );
+  }
+
+  _applyFilters() {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    canvas.width = this.width;
+    canvas.height = this.height;
+    this.draw(context);
+    this.filters.forEach(filter => {
+      filter.apply(canvas, context);
+    });
+    return canvas;
+  }
+
+  render(context) {
+    this.update();
+    if(this.visible === false) {
+      return;
+    }
+    const mat = this.matrix;
+    context.save();
+    context.globalAlpha = this.alpha;
+    context.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
+    if(this.filters != null) {
+      //  on appelle une nouvelle méthode _applyFilters
+      const buffer = this._applyFilters();
+      context.drawImage(canvas, 0, 0, buffer.width, buffer.height );
+    } else {
+      this.draw(context);
+    }
+    context.restore();
   }
 
   // isInRect(x,y, rectX, rectY, rectWidth, rectHeight) {
