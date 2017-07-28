@@ -12,11 +12,15 @@ class DisplayObject extends EventDispatcher {
     this.y = 0;
     this.scaleX = 1;
     this.scaleY = 1;
+    this.rotation = 0;
+    this.pivotX = 0;
+    this.pivotY = 0;
+    this.skewX = 0;
+    this.skewY = 0;
     this.width = 0;
     this.height = 0;
-    this.rotation = 0;
     this.alpha = 1;
-    this.matrix = new Matrix2D();
+    this.matrix = null;
     this._concatenedMatrix = new Matrix2D();
     this.filters = [];
   }
@@ -26,30 +30,17 @@ class DisplayObject extends EventDispatcher {
   }
 
   render(context) {
-   /////////////////////////////////////////////////////////
-   // does not work yet
-   // this.update();
+   const matrix = this.update();
 
-   //  if(this.visible === false) {
-   //    return;
-   //  }
-   //  const mat = this.matrix;
-   //  context.save();
-   //  context.globalAlpha = this.alpha;
-   //  context.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
-   //  this.draw(context);
-   //  context.restore();
-   ////////////////////////////////////////////////////
-    context.save(); // d'abord on sauvegarde le context
-    //puis on applique les transformations, comme nous avons
-    // dans les chapitres précédents
-    context.translate(this.x, this.y);
-    context.rotate(this.rotation * DisplayObject._toRadians);
-    context.scale( this.scaleX, this.scaleY );
+    if(this.visible === false) {
+      return;
+    }
+    const mat = matrix;
+    context.save();
     context.globalAlpha = this.alpha;
-    // puis on dessine
+    console.log(mat)
+    context.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
     this.draw(context);
-    // et enfin on restaure le context sauvegardé plus haut
     context.restore();
   }
 
@@ -61,7 +52,7 @@ class DisplayObject extends EventDispatcher {
   }
 
   update() {
-   const mat = this.matrix;
+   const mat = this.matrix || new Matrix2D();
    mat.appendTransform(
       this.x,
       this.y,
@@ -73,6 +64,7 @@ class DisplayObject extends EventDispatcher {
       this.pivotX,
       this.pivotY
     );
+   return mat;
   }
 
   _applyFilters() {
@@ -87,24 +79,25 @@ class DisplayObject extends EventDispatcher {
     return canvas;
   }
 
-  render(context) {
-    this.update();
-    if(this.visible === false) {
-      return;
-    }
-    const mat = this.matrix;
-    context.save();
-    context.globalAlpha = this.alpha;
-    context.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
-    if(this.filters != null) {
-      //  on appelle une nouvelle méthode _applyFilters
-      const buffer = this._applyFilters();
-      context.drawImage(canvas, 0, 0, buffer.width, buffer.height );
-    } else {
-      this.draw(context);
-    }
-    context.restore();
-  }
+  // render(context) {
+  //   this.update();
+  //   if(this.visible === false) {
+  //     return;
+  //   }
+  //   const mat = this.matrix;
+  //   context.save();
+  //   context.globalAlpha = this.alpha;
+  //   context.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
+  //   if(this.filters != null) {
+  //     //  on appelle une nouvelle méthode _applyFilters
+  //     const buffer = this._applyFilters();
+  //     const canvas = document.createElement("canvas");
+  //     context.drawImage(canvas, 0, 0, buffer.width, buffer.height );
+  //   } else {
+  //     this.draw(context);
+  //   }
+  //   context.restore();
+  // }
 
   // isInRect(x,y, rectX, rectY, rectWidth, rectHeight) {
   //   return
