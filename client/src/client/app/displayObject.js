@@ -1,9 +1,11 @@
 //Tomahawk.registerClass( DisplayObject, "DisplayObject" );
 import Matrix2D from "./matrix2D";
+import EventDispatcher from "./eventDispatcher";
 
-class DisplayObject {
+class DisplayObject extends EventDispatcher {
 
   constructor() {
+    super();
     this.name = null;
     this.parent = null;
     this.x = 0;
