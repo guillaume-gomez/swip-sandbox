@@ -38,9 +38,14 @@ class DisplayObject extends EventDispatcher {
     const mat = matrix;
     context.save();
     context.globalAlpha = this.alpha;
-    console.log(mat)
     context.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
-    this.draw(context);
+    if(this.filters.length !== 0) {
+      const buffer = this._applyFilters();
+      const canvas = document.createElement("canvas");
+      context.drawImage(canvas, 0, 0, buffer.width, buffer.height );
+    } else {
+      this.draw(context);
+    }this.draw(context);
     context.restore();
   }
 
@@ -74,9 +79,14 @@ class DisplayObject extends EventDispatcher {
     canvas.height = this.height;
     this.draw(context);
     this.filters.forEach(filter => {
+      console.log(filter)
       filter.apply(canvas, context);
     });
     return canvas;
+  }
+
+  addFilter(filter) {
+    this.filters.push(filter);
   }
 
   // render(context) {
