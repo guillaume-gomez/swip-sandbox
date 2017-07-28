@@ -49,10 +49,10 @@ class DisplayObject extends EventDispatcher {
     context.restore();
   }
 
-  draw(context){
+  draw(context) {
     context.beginPath();
     context.fillStyle = "red";
-    context.fillRect(0, 0, this.width, this.height);
+    context.fillRect(this.x, this.y, this.width, this.height);
     context.fill();
   }
 
