@@ -1,9 +1,11 @@
-//constantes
-Event.ADDED                 = "added";
-Event.ADDED_TO_STAGE         = "addedToStage";
-Event.ENTER_FRAME             = "enterFrame";
-Event.REMOVED             = "removed";
-Event.REMOVED_FROM_STAGE    = "removedFromStage";
+//constants
+export const Triggers = {
+ADDED                 : "added",
+ADDED_TO_STAGE         : "addedToStage",
+ENTER_FRAME             : "enterFrame",
+REMOVED             : "removed",
+REMOVED_FROM_STAGE    : "removedFromStage"
+}
 
 class Event {
 	constructor(type, bubbles, cancelable = true) {

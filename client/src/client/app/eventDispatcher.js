@@ -1,4 +1,5 @@
 //Tomahawk.registerClass( EventDispatcher, "EventDispatcher" );
+import Event, { Triggers } from "./event";
 
 class EventDispatcher {
   constructor() {
@@ -6,14 +7,15 @@ class EventDispatcher {
     this._listeners = [];
   }
 
-  addEventListener(type, scope, callback, useCapture) {
+  addEventListener(type, scope, callback, useCapture = true) {
     this._listeners.push({ type, scope, callback, useCapture });
+    console.log(this._listeners)
   }
 
   hasEventListener(type){
     if(this._listeners === null) {
       return false;
-    } 
+    }
     const eventFound = this.getEventListener(type);
     return !!eventFound;
   }
@@ -23,19 +25,17 @@ class EventDispatcher {
       event.target = this;
     }
     event.currentTarget = this;
-    const eventFound = this.getEventListener(type);
-    if(eventFound) {
-      if(event.target === this || eventFound.useCapture !== false){
-         eventFound.callback.apply(eventFound.scope, [event]);
-      }
+    const eventFound = this.getEventListener(event.type);
+    if(eventFound && (event.target === this || eventFound.useCapture !== false)) {
+      eventFound.callback.apply(eventFound.scope, [event]);
     }
-    if(event.bubbles === true && this.parent !== null && this.parent.dispatchEvent) {
+    if(event.bubbles === true && this.parent !== null && !!this.parent.dispatchEvent) {
       this.parent.dispatchEvent(event);
     }
   }
 
   getEventListener(type) {
-    this._listeners.find(listener => listener.type === event.type);
+    return this._listeners.find(listener => listener.type === type);
   }
 
   removeEventListener(type, scope, callback, useCapture) {
@@ -45,7 +45,7 @@ class EventDispatcher {
         var i = this._listeners.length;
         var arr = [];
         const newListeners = this._listeners.filter(listenerCurrent => {
-          return  listenerCurrent.type != listener.type || listenerCurrent.scope != scope || listenerCurrent.callback != callback || listenerCurrent.useCapture != useCapture;
+          return  listenerCurrent.type !== listener.type || listenerCurrent.scope !== scope || listenerCurrent.callback !== callback || listenerCurrent.useCapture !== useCapture;
         });
         this._listeners = newListeners;
         let listener = this.getEventListener(type);
@@ -58,7 +58,7 @@ class EventDispatcher {
     }
     child.parent = this;
     this.children.push(child);
-    child.dispatchEvent(new Event(Event.ADDED, true, true));
+    child.dispatchEvent(new Event(Triggers.ADDED, true, true));
   }
 
   addChildAt(child, index) {
@@ -66,7 +66,7 @@ class EventDispatcher {
     const tab2 = this.children.slice(index);
     this.children = tab1.concat([child]).concat(tab2);
     child.parent = this;
-    child.dispatchEvent(new Event(Event.ADDED, true, true));
+    child.dispatchEvent(new Event(Triggers.ADDED, true, true));
   }
 
   removeChildAt(index) {
@@ -75,7 +75,7 @@ class EventDispatcher {
       child.parent = null;
     }
     this.children.splice(index,1);
-    child.dispatchEvent(new Event(Event.REMOVED, true, true));
+    child.dispatchEvent(new Event(Triggers.REMOVED, true, true));
   }
 
   removeChild(child) {
@@ -84,7 +84,7 @@ class EventDispatcher {
       this.children.splice(index,1);
     }
     child.parent = null;
-    child.dispatchEvent(new Event(Event.REMOVED, true, true));
+    child.dispatchEvent(new Event(Triggers.REMOVED, true, true));
   }
 };
 export default EventDispatcher;
