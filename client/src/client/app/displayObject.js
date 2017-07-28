@@ -17,6 +17,7 @@ class DisplayObject extends EventDispatcher {
     this.rotation = 0;
     this.alpha = 1;
     this.matrix = new Matrix2D();
+    this._concatenedMatrix = new Matrix2D();
   }
 
   toRadians() {
@@ -24,6 +25,8 @@ class DisplayObject extends EventDispatcher {
   }
 
   render(context) {
+   /////////////////////////////////////////////////////////
+   // does not work yet
    // this.update();
 
    //  if(this.visible === false) {
@@ -35,6 +38,7 @@ class DisplayObject extends EventDispatcher {
    //  context.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
    //  this.draw(context);
    //  context.restore();
+   ////////////////////////////////////////////////////
     context.save(); // d'abord on sauvegarde le context
     //puis on applique les transformations, comme nous avons
     // dans les chapitres précédents
@@ -55,7 +59,7 @@ class DisplayObject extends EventDispatcher {
     context.fill();
   }
 
-  update(){
+  update() {
    const mat = this.matrix;
    mat.appendTransform(
       this.x,
@@ -69,5 +73,49 @@ class DisplayObject extends EventDispatcher {
       this.pivotY
     );
   }
+
+  // isInRect(x,y, rectX, rectY, rectWidth, rectHeight) {
+  //   return
+  //      x > rectX + rectWidth ||
+  //      y > rectY + rectHeight ||
+  //      x < rectX ||
+  //      y < rectY;
+  // }
+
+  // getConcatenedMatrix(){
+  //   var current = this;
+  //   var mat = new Matrix2D();
+  //   while(current != null) {
+  //     current.update();
+  //     mat.prependMatrix(current.matrix );
+  //     current = current.parent;
+  //   }
+  //   this._concatenedMatrix = mat;
+  //   return this._concatenedMatrix;
+  // }
+
+
+  // localToGlobal(x, y) {
+  //   const matrix = this.getConcatenedMatrix();
+  //   const pt = matrix.transformPoint(x, y);
+  //   return new Point(pt.x, pt.y);
+  // }
+
+  // globalToLocal(x, y) {
+  //   const matrix = this.getConcatenedMatrix().clone().invert();
+  //   const pt = matrix.transformPoint(x, y);
+  //   return new Point(pt.x, pt.y);
+  // }
+
+  // hitTest(x, y) {
+  //   if(this.matrix === null) {
+  //     this.update();
+  //   }
+
+  //   const pt1 = this.globalToLocal(x,y);
+  //   return pt1.x < 0 || pt1.x > this.width || pt1.y < 0 || pt1.y > this.height;
+  // }
+
+
 };
 export default DisplayObject;
